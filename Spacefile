@@ -1,0 +1,16 @@
+# Spacefile Docs: https://go.deta.dev/docs/spacefile/v0
+v: 0
+micros:
+  - name: Fallout76MarketplaceKarmaAPI
+    src: ./
+    engine: python3.9
+    primary: true
+    run: uvicorn main:app
+    dev: .venv/bin/uvicorn main:app --reload
+
+    presets:
+      api_keys: true
+      env:
+        - name: MONGO_PASS
+          description: Mongo DB URL with username and password.
+          default: ""

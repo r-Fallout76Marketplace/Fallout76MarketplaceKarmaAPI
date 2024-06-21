@@ -1,0 +1,9 @@
+black
+fastapi
+motor
+motor-types
+mypy
+pyright
+python-dotenv
+ruff
+uvicorn
