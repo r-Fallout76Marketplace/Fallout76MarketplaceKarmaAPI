@@ -63,6 +63,6 @@ async def update_gamertag(user_profile: UserProfile, karma_db: AsyncIOMotorDatab
     user_karma_collection = await get_mongo_collection("user_karma", karma_db)
     status = await update_user_profile(user_profile=user_profile, users_collection=user_karma_collection)
     if status:
-        return JSONResponse(status_code=200, content={"message": "KarmaProfile updated successfully for Reddit username: {reddit_username}"})
+        return JSONResponse(status_code=200, content={"message": f"Karma Profile updated successfully for Reddit username: {user_profile.reddit_username}."})
     else:
-        return JSONResponse(status_code=404, content={"message": f"Reddit username '{user_profile.reddit_username}' not found"})
+        return JSONResponse(status_code=404, content={"message": f"Reddit username '{user_profile.reddit_username}' not found."})
