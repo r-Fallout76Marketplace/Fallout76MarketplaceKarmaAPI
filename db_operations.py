@@ -2,7 +2,7 @@ from __future__ import annotations
 
 from contextlib import asynccontextmanager
 from os import getenv
-from typing import AsyncGenerator, Optional
+from typing import AsyncGenerator, Literal, Optional, TypedDict
 
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection, AsyncIOMotorDatabase
 from pydantic import BaseModel
@@ -34,8 +34,8 @@ async def get_mongo_collection(collection_name: str, fallout76marketplace_karma_
 
 class Gamertag(BaseModel):
     gamertag: str
-    gamertag_id: int
-    platform: str
+    gamertag_id: str
+    platform: Literal["XBOX", "PlayStation", "PC"]
 
 
 class UserProfile(BaseModel):
@@ -59,3 +59,11 @@ async def find_profile(reddit_username: str, users_collection: AsyncIOMotorColle
         return None
 
     return UserProfile(**profile)
+
+
+async def update_user_profile(user_profile: UserProfile, users_collection: AsyncIOMotorCollection) -> bool:
+    profile = await users_collection.find_one({"reddit_username": user_profile.reddit_username})
+    if profile is not None:
+        await users_collection.replace_one({"reddit_username": user_profile.reddit_username}, user_profile.model_dump())
+        return True
+    return False

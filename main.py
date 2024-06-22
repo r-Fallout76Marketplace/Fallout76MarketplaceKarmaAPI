@@ -9,7 +9,7 @@ from fastapi.responses import JSONResponse, RedirectResponse
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pydantic import BaseModel
 
-from db_operations import UserProfile, find_profile, get_karma_db, get_mongo_collection
+from db_operations import UserProfile, find_profile, get_karma_db, get_mongo_collection, update_user_profile
 
 load_dotenv()
 
@@ -38,7 +38,7 @@ class Message(BaseModel):
 
 
 @app.get(
-    "/users/{reddit_username}",
+    path="/users/{reddit_username}",
     response_model=UserProfile,
     summary="Get KarmaProfile by Reddit username.",
     responses={404: {"model": Message}},
@@ -47,5 +47,22 @@ async def get_user(reddit_username: str, karma_db: AsyncIOMotorDatabase = Depend
     user_karma_collection = await get_mongo_collection("user_karma", karma_db)
     user_profile = await find_profile(reddit_username, user_karma_collection)
     if user_profile is None:
-        return JSONResponse(status_code=404, content={"message": "Reddit username not found"})
+        return JSONResponse(status_code=404, content={"message": f"Reddit username '{reddit_username}' not found"})
     return user_profile
+
+
+@app.put(
+    path="/users/profile",
+    summary="Update existing KarmaProfile for Reddit username.",
+    responses={
+        200: {"model": Message},
+        404: {"model": Message},
+    },
+)
+async def update_gamertag(user_profile: UserProfile, karma_db: AsyncIOMotorDatabase = Depends(get_db)) -> JSONResponse:
+    user_karma_collection = await get_mongo_collection("user_karma", karma_db)
+    status = await update_user_profile(user_profile=user_profile, users_collection=user_karma_collection)
+    if status:
+        return JSONResponse(status_code=200, content={"message": "KarmaProfile updated successfully for Reddit username: {reddit_username}"})
+    else:
+        return JSONResponse(status_code=404, content={"message": f"Reddit username '{user_profile.reddit_username}' not found"})
