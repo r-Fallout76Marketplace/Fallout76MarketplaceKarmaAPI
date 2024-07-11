@@ -2,10 +2,10 @@ from __future__ import annotations
 
 from contextlib import asynccontextmanager
 from os import getenv
-from typing import AsyncGenerator, Literal, Optional, TypedDict
+from typing import AsyncGenerator, Literal, Optional
 
 from motor.motor_asyncio import AsyncIOMotorClient, AsyncIOMotorCollection, AsyncIOMotorDatabase
-from pydantic import BaseModel
+from pydantic import BaseModel, Field
 
 
 @asynccontextmanager
@@ -33,8 +33,8 @@ async def get_mongo_collection(collection_name: str, fallout76marketplace_karma_
 
 
 class Gamertag(BaseModel):
-    gamertag: str
-    gamertag_id: str
+    gamertag: str = Field(..., min_length=1)
+    gamertag_id: str = Field(..., min_length=1, pattern=r"^\d+$")
     platform: Literal["XBOX", "PlayStation", "PC"]
 
 
