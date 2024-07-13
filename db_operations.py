@@ -67,3 +67,21 @@ async def update_user_profile(user_profile: UserProfile, users_collection: Async
         await users_collection.replace_one({"reddit_username": user_profile.reddit_username}, user_profile.model_dump())
         return True
     return False
+
+
+async def add_user_profile(user_profile: UserProfile, users_collection: AsyncIOMotorCollection) -> bool:
+    profile = await users_collection.find_one({"reddit_username": user_profile.reddit_username})
+
+    if profile is not None:
+        return False
+
+    insert_result = await users_collection.insert_one(
+        {
+            "reddit_username": user_profile.reddit_username,
+            "karma": user_profile.karma,
+            "m76_karma": user_profile.m76_karma,
+            "gamertags": user_profile.gamertags,
+        }
+    )
+
+    return insert_result.acknowledged

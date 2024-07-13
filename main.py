@@ -9,7 +9,7 @@ from fastapi.responses import JSONResponse, RedirectResponse
 from motor.motor_asyncio import AsyncIOMotorDatabase
 from pydantic import BaseModel
 
-from db_operations import UserProfile, find_profile, get_karma_db, get_mongo_collection, update_user_profile
+from db_operations import UserProfile, add_user_profile, find_profile, get_karma_db, get_mongo_collection, update_user_profile
 
 load_dotenv()
 
@@ -66,3 +66,20 @@ async def update_gamertag(user_profile: UserProfile, karma_db: AsyncIOMotorDatab
         return JSONResponse(status_code=200, content={"message": f"Karma Profile updated successfully for Reddit username: {user_profile.reddit_username}."})
     else:
         return JSONResponse(status_code=404, content={"message": f"Reddit username '{user_profile.reddit_username}' not found."})
+
+
+@app.post(
+    path="/users/profile",
+    summary="Add new KarmaProfile for Reddit username.",
+    responses={
+        200: {"model": Message},
+        400: {"model": Message},
+    },
+)
+async def add_profile(user_profile: UserProfile, karma_db: AsyncIOMotorDatabase = Depends(get_db)) -> JSONResponse:
+    user_karma_collection = await get_mongo_collection("user_karma", karma_db)
+    status = await add_user_profile(user_profile=user_profile, users_collection=user_karma_collection)
+    if status:
+        return JSONResponse(status_code=200, content={"message": f"Karma Profile added successfully for Reddit username: {user_profile.reddit_username}."})
+    else:
+        return JSONResponse(status_code=400, content={"message": "Profile Already exists or invalid fields in user profile."})
