@@ -82,4 +82,4 @@ async def add_profile(user_profile: UserProfile, karma_db: AsyncIOMotorDatabase 
     if status:
         return JSONResponse(status_code=200, content={"message": f"Karma Profile added successfully for Reddit username: {user_profile.reddit_username}."})
     else:
-        return JSONResponse(status_code=400, content={"message": "Profile Already exists or invalid fields in user profile."})
+        return JSONResponse(status_code=400, content={"message": "Profile already exists or invalid fields in user profile."})
