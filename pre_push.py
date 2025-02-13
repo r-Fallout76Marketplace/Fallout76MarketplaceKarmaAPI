@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!.venv/bin/python
 """Run static analysis on the project."""
 
 import sys
@@ -6,7 +6,8 @@ from subprocess import CalledProcessError, check_call
 
 
 def do_process(args: list[str], shell: bool = False, cwd: str = ".") -> bool:
-    """Run program provided by args.
+    """
+    Run program provided by args.
 
     Return ``True`` on success.
 
@@ -28,7 +29,8 @@ def do_process(args: list[str], shell: bool = False, cwd: str = ".") -> bool:
 
 
 def run_static() -> bool:
-    """Runs the static tests.
+    """
+    Runs the static tests.
 
     Returns a statuscode of 0 if everything ran correctly. Otherwise, it will return statuscode 1
 
@@ -42,7 +44,8 @@ def run_static() -> bool:
 
 
 def main() -> int:
-    """Runs the main function.
+    """
+    Runs the main function.
 
     Run static and lint on code
 

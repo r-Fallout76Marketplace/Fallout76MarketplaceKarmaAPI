@@ -1,3 +1,16 @@
+[project]
+name = "fallout76marketplacekarmaapi"
+version = "0.1.0"
+description = "Backend for the Devvit app Pip-Boy2000 on r/Fallout76Marketplace"
+readme = "README.md"
+requires-python = ">=3.11"
+dependencies = [
+    "fastapi[standard]>=0.115.8",
+    "motor>=3.7.0",
+    "motor-types>=1.0.0b4",
+    "python-dotenv>=1.0.1",
+]
+
 [tool.mypy]
 strict = true
 check_untyped_defs = true
@@ -15,14 +28,29 @@ exclude = [".venv", "venv"]
 
 [tool.pyright]
 exclude = [".venv", "venv"]
-pythonVersion = "3.9"
+pythonVersion = "3.11"
 typeCheckingMode = "strict"
 
 [tool.black]
 line-length = 160
 
-[tool.ruff]
-line-length = 160
+[tool.ruff.format]
+docstring-code-format = true
+docstring-code-line-length = 88
 
 [tool.ruff.lint]
-select = ["E", "F", "I001", "I002"]
+select = ["ALL"]
+ignore = [
+    "BLE",  # Allow blind except (`except:`) without specifying an exception type.
+    "D100", # Allow missing docstrings for public modules.
+    "D203", # Allow class doc strings without a blank line before them (conflicts with D211).
+    "D212", # Allow multi-line docstring summaries to start on the second line (conflicts with D213).
+    "D401", # Allow docstring summaries that are not in imperative mood.
+    "E501", # Allow lines to exceed the maximum character limit (handled by Black).
+    "FBT",  # Allow functions to take boolean positional arguments (disables Flake8 Boolean Trap).
+    "S603", # Allow `subprocess` calls without enforcing `shell=False`.
+    "T201", # Allow usage of `print()` (instead of requiring logging).
+]
+
+[dependency-groups]
+dev = ["black>=25.1.0", "mypy>=1.15.0", "pyright>=1.1.394", "ruff>=0.9.6"]
