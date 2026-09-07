@@ -1,4 +1,6 @@
 #!/usr/bin/env python3
+# https://community.koyeb.com/t/what-are-the-reasons-for-pausing-of-service-by-cp/264/4
+import json
 from os import getenv
 from urllib import request
 
@@ -23,7 +25,7 @@ def main():
     req = request.Request(
         "https://app.koyeb.com/v1/account/login",
         headers=headers,
-        data=str(json_data).encode(),
+        data=json.dumps(json_data).encode("utf-8"),
     )
     with request.urlopen(req) as response:
         print(response.read().decode())
