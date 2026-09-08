@@ -5,10 +5,10 @@ description = "Backend for the Devvit app Pip-Boy2000 on r/Fallout76Marketplace"
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
-    "fastapi[standard]>=0.115.8",
-    "motor>=3.7.0",
+    "fastapi[standard]>=0.141.1",
+    "motor>=3.7.1",
     "motor-types>=1.0.0b4",
-    "python-dotenv>=1.0.1",
+    "python-dotenv>=1.2.3",
 ]
 
 [tool.mypy]
